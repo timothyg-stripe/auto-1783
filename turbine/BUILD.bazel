@@ -35,7 +35,7 @@ native_image(
         # See :turbine_benchmark for the benchmark script used.
         "-R:MinHeapSize=512m",
         # For debugging:
-        # "--initialize-at-build-time=com.google.auto.value.processor.AutoValueTemplateVars,autovalue.shaded.com.google.escapevelocity,autovalue.shaded.com.google.common.collect,autovalue.shaded.com.google.common.base",
+        "--initialize-at-build-time=com.google.auto.value.processor.AutoValueTemplateVars,autovalue.shaded.com.google.escapevelocity,autovalue.shaded.com.google.common.collect,autovalue.shaded.com.google.common.base",
     ] + select({
         "@platforms//cpu:x86_64": [
             # Graal's default settings result in executables that aren't sufficiently compatible for
