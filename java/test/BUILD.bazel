@@ -1,0 +1,26 @@
+load("@rules_java//java:defs.bzl", "java_binary")
+
+java_plugin(
+    name = "autovalue_plugin",
+    generates_api = True,
+    processor_class = "com.google.auto.value.processor.AutoValueProcessor",
+    deps = ["@maven//:com_google_auto_value_auto_value"],
+)
+
+java_library(
+    name = "autovalue",
+    exported_plugins = [":autovalue_plugin"],
+    exports = ["@maven//:com_google_auto_value_auto_value_annotations"],
+)
+
+java_library(
+    name = "my_library",
+    srcs = ["MyLibrary.java"],
+    deps = [":autovalue"],
+)
+
+java_binary(
+    name = "my_binary",
+    srcs = ["MyBinary.java"],
+    deps = [":my_library"],
+)

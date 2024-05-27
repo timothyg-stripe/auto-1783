@@ -1,0 +1,51 @@
+load("@rules_graalvm//graalvm:defs.bzl", "native_image")
+load("@rules_java//java:defs.bzl", "java_binary")
+
+_TURBINE_MAIN_CLASS = "com.google.turbine.main.Main"
+
+java_library(
+    name = "turbine_deps",
+    runtime_deps = [
+        "@maven//:com_google_auto_value_auto_value",
+        "@maven//:com_google_turbine_turbine",
+    ],
+)
+
+# Copied from https://cs.opensource.google/bazel/bazel/+/master:src/java_tools/buildjar/java/com/google/devtools/build/java/turbine/BUILD;l=29;drc=11498b5bf62d1cebf4404fa5dcab3c547ef8b540
+native_image(
+    name = "turbine_direct_graal",
+    executable_name = select({
+        # TODO(cushon): restore .exe suffix on windows
+        # see https://github.com/sgammon/rules_graalvm/issues/324
+        "@bazel_tools//src/conditions:windows": "%target%",
+        "//conditions:default": "%target%",
+    }),
+    extra_args = [
+        # Workaround for https://github.com/oracle/graal/issues/4757.
+        "-H:-UseContainerSupport",
+        # Do not fall back to bundling a full JVM when native image compilation fails.
+        "--no-fallback",
+        # More verbose errors in case of compilation failures.
+        "-H:+ReportExceptionStackTraces",
+        # A benchmark on Bazel itself shows a ~15% improvement in combined compile and header
+        # compile action time on an incremental build triggered by a signature change to Label with
+        # this option. 256m provides a noticeably smaller improvement, higher values do not provide
+        # further improvement and would go over the local resource estimate in
+        # com.google.devtools.build.lib.rules.java.JavaCompileAction.LOCAL_RESOURCES.
+        # See :turbine_benchmark for the benchmark script used.
+        "-R:MinHeapSize=512m",
+        # For debugging:
+        # "--initialize-at-build-time=com.google.auto.value.processor.AutoValueTemplateVars,autovalue.shaded.com.google.escapevelocity,autovalue.shaded.com.google.common.collect,autovalue.shaded.com.google.common.base",
+    ] + select({
+        "@platforms//cpu:x86_64": [
+            # Graal's default settings result in executables that aren't sufficiently compatible for
+            # general use in Bazel.
+            "-march=x86-64-v2",
+        ],
+        "//conditions:default": [],
+    }),
+    main_class = _TURBINE_MAIN_CLASS,
+    reflection_configuration = "reflection-config.json",
+    resource_configuration = "resource-config.json",
+    deps = [":turbine_deps"],
+)

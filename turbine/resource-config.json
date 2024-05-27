@@ -1,0 +1,9 @@
+{
+  "resources": {
+    "includes": [
+      {"pattern": ".*com/google/auto/.*\\.vm$"},
+      {"pattern": ".*\\.kotlin_builtins$"},
+      {"pattern": ".*\\.kotlin_metadata$"}
+    ]
+  }
+}

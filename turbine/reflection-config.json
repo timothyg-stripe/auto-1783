@@ -1,0 +1,45 @@
+[
+  {
+    "name" : "com.google.auto.value.processor.AutoValueProcessor",
+    "allPublicMethods": true,
+    "allDeclaredMethods": true,
+    "methods" : [
+      { "name" : "<init>", "parameterTypes" : [] }
+    ]
+  },
+  {
+    "name": "com.google.auto.value.processor.AutoAnnotationTemplateVars",
+    "allPublicFields": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.auto.value.processor.AutoBuilderTemplateVars",
+    "allPublicFields": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.auto.value.processor.AutoBuilderAnnotationTemplateVars",
+    "allPublicFields": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.auto.value.processor.AutoOneOfTemplateVars",
+    "allPublicFields": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.auto.value.processor.AutoValueOrBuilderTemplateVars",
+    "allPublicFields": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.auto.value.processor.AutoValueTemplateVars",
+    "allPublicFields": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.auto.value.processor.AutoValueishTemplateVars",
+    "allPublicFields": true,
+    "allDeclaredFields": true
+  }
+]

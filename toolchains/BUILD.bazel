@@ -1,0 +1,11 @@
+load("@rules_java//toolchains:default_java_toolchain.bzl", "default_java_toolchain")
+
+default_java_toolchain(
+    name = "java_toolchain",
+    header_compiler_builtin_processors = ["com.google.auto.value.processor.AutoValueProcessor"],
+    header_compiler_direct = ":turbine_direct_graal_precompiled",
+    source_version = "21",
+    target_version = "21",
+)
+
+exports_files(["turbine_direct_graal_precompiled"])
