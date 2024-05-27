@@ -163,3 +163,45 @@ autovalue.shaded.com.google.escapevelocity.EvaluationException: In expression on
 	at com.google.turbine.main.Main.main(Main.java:89)
 	at java.base@22/java.lang.invoke.LambdaForm$DMH/sa346b79c.invokeStaticInit(LambdaForm$DMH)
 ```
+
+## Appendix: Overriding jars
+
+Here's a way to override the AutoValue jar, for additional testing:
+
+```diff
+diff --git a/WORKSPACE.bazel b/WORKSPACE.bazel
+index 5d82f9b..85747a0 100644
+--- a/WORKSPACE.bazel
++++ b/WORKSPACE.bazel
+@@ -1,4 +1,4 @@
+-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
++load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_jar")
+
+ http_archive(
+     name = "rules_java",
+@@ -32,6 +32,12 @@ rules_jvm_external_setup()
+
+ load("@rules_jvm_external//:defs.bzl", "maven_install")
+
++http_jar(
++    name = "override_auto_value_jar",
++    url = "https://repo1.maven.org/maven2/com/google/auto/value/auto-value/1.10.3/auto-value-1.10.3.jar",
++    sha256 = "25eb10ca41a1ee5024e68163924518975acee101068f779f4b8b090fca10b606",
++)
++
+ maven_install(
+     artifacts = [
+         "com.google.auto.value:auto-value:1.10.4",
+@@ -42,6 +48,9 @@ maven_install(
+     repositories = [
+         "https://repo1.maven.org/maven2",
+     ],
++    override_targets = {
++        "com.google.auto.value:auto-value": "@override_auto_value_jar//jar",
++    },
+ )
+
+ load("@maven//:defs.bzl", "pinned_maven_install")
+```
+
+The `http_jar` could be replaced with, e.g., a `local_repository` as one wishes.
